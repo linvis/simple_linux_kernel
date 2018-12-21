@@ -1,0 +1,1 @@
+cmd_sound/soc/samsung/srp_ulp/built-in.o :=  /home/parallels/toolchains/arm-2009q3/bin/arm-none-linux-gnueabi-ld -EL    -r -o sound/soc/samsung/srp_ulp/built-in.o sound/soc/samsung/srp_ulp/srp.o sound/soc/samsung/srp_ulp/srp_fw.o 
