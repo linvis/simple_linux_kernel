@@ -5,11 +5,7 @@ menuconfig MTK_COMBO_MT66XX
 
 if MTK_COMBO_MT66XX
 
-config MTK_COMBO_WMT
-	tristate "MediaTek Combo Chip wireless managment tool"
-	default y
-	help
-	  MTK wireless managment tool for WIFI/BT/GPS/FM
+source "drivers/misc/mediatek/combo_mt66xx/wmt/Kconfig"
 
 config MTK_COMBO_BT
 	tristate "MediaTek Combo Chip BT driver"

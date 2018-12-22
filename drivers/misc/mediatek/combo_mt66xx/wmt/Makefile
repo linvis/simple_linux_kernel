@@ -9,6 +9,9 @@ ifeq ($(strip $(MTK_WCN_CMB_SDIO_EINT)), y)
 ccflags-y += -DMTK_CMB_SDIO_EINT
 endif
 
+$(warning A1111111111111 top-level warning)
+
+
 #stub to build-in
 obj-y += platform/vendor/mtk_wcn_cmb_stub.o
 

@@ -503,6 +503,7 @@ deps_config := \
 	drivers/scsi/Kconfig \
 	drivers/ide/Kconfig \
 	drivers/misc/mediatek/mt6622/Kconfig \
+	drivers/misc/mediatek/combo_mt66xx/wmt/Kconfig \
 	drivers/misc/mediatek/combo_mt66xx/Kconfig \
 	drivers/misc/mediatek/Kconfig \
 	drivers/misc/mpu6050/Kconfig \

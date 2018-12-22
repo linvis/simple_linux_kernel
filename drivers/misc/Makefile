@@ -64,3 +64,5 @@ obj-$(CONFIG_SAMSUNG_C2C)	+= c2c/
 #add by cym 20130606
 obj-$(CONFIG_INV_SENSORS_MPU6050) += mpu6050/
 #endif
+
+obj-$(CONFIG_MTK_WIRELESS_SOLUTION) += mediatek/

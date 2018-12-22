@@ -2789,6 +2789,39 @@ struct platform_device exynos_device_md0 = {
 
 extern struct platform_device s5p_device_sysmmu;
 #endif
+
+#ifdef CONFIG_MTK_COMBO_MT66XX
+static struct mtk_wmt_platform_data mtk_wmt_pdata = {
+    .pmu = EXYNOS4_GPC1(0), 
+    .rst = EXYNOS4_GPC1(1),
+    .bgf_int = EXYNOS4_GPX2(4),
+    .urt_cts = -EINVAL,
+    .rtc = -EINVAL,
+    .gps_sync = -EINVAL,
+    .gps_lna = -EINVAL,
+};
+
+static struct mtk_sdio_eint_platform_data mtk_sdio_eint_pdata = {
+    .sdio_eint = EXYNOS4_GPX2(5),
+};
+
+static struct platform_device mtk_wmt_dev = {
+    .name = "mtk_wmt",
+    .id = 1,
+    .dev = {
+        .platform_data = &mtk_wmt_pdata,
+    },
+};
+
+static struct platform_device mtk_sdio_eint_dev = {
+    .name = "mtk_sdio_eint",
+    .id = 1,
+    .dev = {
+        .platform_data = &mtk_sdio_eint_pdata,
+    },
+};
+#endif
+
 static struct platform_device *smdk4412_devices[] __initdata = {
 	&s3c_device_adc,
 };
@@ -3052,6 +3085,11 @@ static struct platform_device *smdk4x12_devices[] __initdata = {
 
 #ifdef CONFIG_LEDS_DEMO_CTL
     &s3c_device_leds_demo_ctl,
+#endif
+
+#ifdef CONFIG_MTK_COMBO_MT66XX
+    /* &mtk_wmt_dev, */
+    /* &mtk_sdio_eint_dev, */
 #endif
 
 #ifdef CONFIG_KEYS_DEMO_CTL
@@ -4462,36 +4500,6 @@ err_clk:
 }
 
 #ifdef CONFIG_MTK_COMBO_MT66XX
-static struct mtk_wmt_platform_data mtk_wmt_pdata = {
-    .pmu = EXYNOS4_GPC1(0), 
-    .rst = EXYNOS4_GPC1(1),
-    .bgf_int = EXYNOS4_GPX2(4),
-    .urt_cts = -EINVAL,
-    .rtc = -EINVAL,
-    .gps_sync = -EINVAL,
-    .gps_lna = -EINVAL,
-};
-
-static struct mtk_sdio_eint_platform_data mtk_sdio_eint_pdata = {
-    .sdio_eint = EXYNOS4_GPX2(5),
-};
-
-static struct platform_device mtk_wmt_dev = {
-    .name = "mtk_wmt",
-    .id = 1,
-    .dev = {
-        .platform_data = &mtk_wmt_pdata,
-    },
-};
-
-static struct platform_device mtk_sdio_eint_dev = {
-    .name = "mtk_sdio_eint",
-    .id = 1,
-    .dev = {
-        .platform_data = &mtk_sdio_eint_pdata,
-    },
-};
-
 static void __init mtk_combo_init(void)
 {
     /* MT66xx PMUEN */

@@ -1,0 +1,5 @@
+config MTK_COMBO_WMT
+	tristate "MediaTek Combo Chip wireless managment tool"
+	default y
+	help
+	  MTK wireless managment tool for WIFI/BT/GPS/FM

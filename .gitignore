@@ -13,4 +13,10 @@ vmlinux
 .version
 .vmlinux.cmd
 Module.symvers
+*.builtin
+*.order
+*.ko
+*.mod.c
+.tmp_versions
+*.cmd
 
