@@ -130,7 +130,6 @@ source "drivers/clocksource/Kconfig"
 
 #add by cym 20130301
 source "drivers/unaplus/Kconfig"
-source "drivers/mtk_wcn_combo/Kconfig"
 source "drivers/topeet/Kconfig"
 #end add
 

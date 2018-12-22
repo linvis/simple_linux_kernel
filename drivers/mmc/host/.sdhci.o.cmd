@@ -650,23 +650,6 @@ deps_drivers/mmc/host/sdhci.o := \
   include/linux/mmc/pm.h \
   include/linux/mmc/card.h \
   include/linux/mod_devicetable.h \
-  include/linux/mmc/sdio.h \
-  include/linux/gpio.h \
-    $(wildcard include/config/generic/gpio.h) \
-  /home/parallels/wspace/simple_linux_kernel/arch/arm/include/asm/gpio.h \
-  arch/arm/mach-exynos/include/mach/gpio.h \
-    $(wildcard include/config/arch/exynos.h) \
-    $(wildcard include/config/samsung/gpio/extra.h) \
-  arch/arm/mach-exynos/include/mach/gpio-exynos4.h \
-    $(wildcard include/config/s3c/gpio/space.h) \
-  arch/arm/mach-exynos/include/mach/gpio-exynos5.h \
-  include/asm-generic/gpio.h \
-    $(wildcard include/config/gpiolib.h) \
-    $(wildcard include/config/of/gpio.h) \
-    $(wildcard include/config/of.h) \
-    $(wildcard include/config/gpio/sysfs.h) \
-  arch/arm/plat-samsung/include/plat/gpio-cfg.h \
-    $(wildcard include/config/s5p/gpio/int.h) \
   drivers/mmc/host/sdhci.h \
     $(wildcard include/config/mmc/sdhci/io/accessors.h) \
   include/linux/mmc/sdhci.h \

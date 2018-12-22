@@ -29,6 +29,7 @@ deps_arch/arm/mach-exynos/mach-itop4412.o := \
     $(wildcard include/config/fb/s5p/mipi/dsim.h) \
     $(wildcard include/config/tc4/gb.h) \
     $(wildcard include/config/kernel/panic/dump.h) \
+    $(wildcard include/config/mtk/combo/mt66xx.h) \
     $(wildcard include/config/mpu/sensors/mpu3050.h) \
     $(wildcard include/config/tc4/portrait/mode.h) \
     $(wildcard include/config/mpu/sensors/mpu6000.h) \
@@ -2066,6 +2067,7 @@ deps_arch/arm/mach-exynos/mach-itop4412.o := \
   include/linux/atomic.h \
     $(wildcard include/config/arch/has/atomic/or.h) \
   arch/arm/mach-exynos/include/mach/panic-dump.h \
+  include/linux/combo_mt66xx.h \
   include/linux/mpu.h \
   include/linux/mpu_ics.h \
     $(wildcard include/config/odr/suspend.h) \

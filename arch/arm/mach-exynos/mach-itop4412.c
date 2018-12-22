@@ -174,6 +174,10 @@
 #include <mach/panic-dump.h>
 #endif
 
+#ifdef CONFIG_MTK_COMBO_MT66XX
+#include <linux/combo_mt66xx.h>
+#endif
+
 #ifdef CONFIG_TC4_GB// liang
 #include <linux/mpu.h>
 #if defined(CONFIG_MPU_SENSORS_MPU3050) || defined(CONFIG_MPU_SENSORS_MPU3050_MODULE)
@@ -1722,7 +1726,7 @@ REGULATOR_INIT(ldo23, "VDD28_TF", 2800000, 2800000, 1,
 REGULATOR_INIT(ldo24, "VDD33_A31", 3300000, 3300000, 1,
 		REGULATOR_CHANGE_STATUS, 0);
 #else
-#if defined(CONFIG_MTK_COMBO_COMM) || defined(CONFIG_MTK_COMBO_COMM_MODULE)
+#if defined(CONFIG_MTK_COMBO_COMM) || defined(CONFIG_MTK_COMBO_COMM_MODULE) || defined(CONFIG_MTK_COMBO_MT66XX)
 REGULATOR_INIT(ldo24, "VDD33_A31", 3300000, 3300000, 1,
                 REGULATOR_CHANGE_STATUS, 0);
 #else
@@ -3979,6 +3983,16 @@ static unsigned int tc4_sleep_gpio_table[][3] = {
 	//GPM3(6)--PMIC_DS3
 	//GPM3(7)--PMIC_DS4
 	#endif
+
+#ifdef CONFIG_MTK_COMBO_MT66XX
+	{ EXYNOS4_GPK3(0),  S3C_GPIO_SLP_PREV,	S3C_GPIO_PULL_NONE},	//WIFI_CLK
+	{ EXYNOS4_GPK3(1),  S3C_GPIO_SLP_PREV,	S3C_GPIO_PULL_NONE},	//WIFI_CMD
+	{ EXYNOS4_GPK3(2),  S3C_GPIO_SLP_INPUT,	S3C_GPIO_PULL_DOWN},	//HUB_CONNECT
+	{ EXYNOS4_GPK3(3),  S3C_GPIO_SLP_PREV,	S3C_GPIO_PULL_NONE},	//WIFI_DATA0
+	{ EXYNOS4_GPK3(4),  S3C_GPIO_SLP_PREV,	S3C_GPIO_PULL_NONE},	//WIFI_DATA1
+	{ EXYNOS4_GPK3(5),  S3C_GPIO_SLP_PREV,	S3C_GPIO_PULL_NONE},	//WIFI_DATA2
+	{ EXYNOS4_GPK3(6),  S3C_GPIO_SLP_PREV,	S3C_GPIO_PULL_NONE},	//WIFI_DATA3
+#endif
 	
 
 #if 1
@@ -4447,6 +4461,122 @@ err_clk:
 	return ret;
 }
 
+#ifdef CONFIG_MTK_COMBO_MT66XX
+static struct mtk_wmt_platform_data mtk_wmt_pdata = {
+    .pmu = EXYNOS4_GPC1(0), 
+    .rst = EXYNOS4_GPC1(1),
+    .bgf_int = EXYNOS4_GPX2(4),
+    .urt_cts = -EINVAL,
+    .rtc = -EINVAL,
+    .gps_sync = -EINVAL,
+    .gps_lna = -EINVAL,
+};
+
+static struct mtk_sdio_eint_platform_data mtk_sdio_eint_pdata = {
+    .sdio_eint = EXYNOS4_GPX2(5),
+};
+
+static struct platform_device mtk_wmt_dev = {
+    .name = "mtk_wmt",
+    .id = 1,
+    .dev = {
+        .platform_data = &mtk_wmt_pdata,
+    },
+};
+
+static struct platform_device mtk_sdio_eint_dev = {
+    .name = "mtk_sdio_eint",
+    .id = 1,
+    .dev = {
+        .platform_data = &mtk_sdio_eint_pdata,
+    },
+};
+
+static void __init mtk_combo_init(void)
+{
+    /* MT66xx PMUEN */
+    if (gpio_request(EXYNOS4_GPC1(0), "GPC1_0")) {
+        printk(KERN_ERR "failed to request GPC1_0 for MT6620 PMUEN controller\n");
+    }
+
+    /* MT66xx SYSRST */
+    if (gpio_request(EXYNOS4_GPC1(1), "GPC1_1")) {
+        printk(KERN_ERR "failed to request GPC1_0 for MT6620 PMUEN controller\n");
+    }
+
+    s3c_gpio_cfgpin(EXYNOS4_GPC1(0), S3C_GPIO_OUTPUT);
+    s3c_gpio_cfgpin(EXYNOS4_GPC1(1), S3C_GPIO_OUTPUT);
+
+    gpio_direction_output(EXYNOS4_GPC1(0), 0);
+    gpio_direction_output(EXYNOS4_GPC1(1), 0);
+
+    mdelay(5);
+    printk(KERN_WARNING "111111111111111111111111111111111111\n");
+
+    /* need config eint models for Wifi & BGA interrupt */
+    if (gpio_request(EXYNOS4_GPX2(5), "WiFi INT")) {
+        printk(KERN_WARNING "MT6620 WiFi INT(GPX2.5) Port request error!!!\n");
+    } else {
+        s3c_gpio_setpull(EXYNOS4_GPX2(5), S3C_GPIO_PULL_NONE);
+        s3c_gpio_cfgpin(EXYNOS4_GPX2(5), S3C_GPIO_SFN(0xF));
+        gpio_free(EXYNOS4_GPX2(5));
+    }
+
+    if (gpio_request(EXYNOS4_GPX2(4), "BGF INT")) {
+        printk(KERN_WARNING "MT6620 BGA INT(GPX2.4) Port request error!!!\n");
+    } else {
+        s3c_gpio_setpull(EXYNOS4_GPX2(4), S3C_GPIO_PULL_NONE);
+        s3c_gpio_cfgpin(EXYNOS4_GPX2(4), S3C_GPIO_SFN(0xF));
+        gpio_free(EXYNOS4_GPX2(4));
+    }
+
+    /* normal interrupt port is high level */
+    if (gpio_request(EXYNOS4_GPX3(2), "6620_GPIO2") != 0) {
+        printk("[mt6620] ERROR:Cannot request 6260_GPIO2\n");
+    } else {
+        gpio_direction_output(EXYNOS4_GPX3(2), 1);
+        gpio_set_value(EXYNOS4_GPX3(2), 1);
+        mdelay(100);
+        gpio_free(EXYNOS4_GPX3(2));
+    }
+
+    return 0;
+}
+
+void setup_mt6620_wlan_power_for_onoff(int on)
+{
+    int chip_pwd_low_val;
+    int outValue;
+
+    printk("[mt6620] +++ %s : wlan power %s\n",__func__, on?"on":"off");
+    
+    if (on) {
+        outValue = 0;
+    } else {
+        outValue = 1;
+    }
+
+    if (gpio_request(EXYNOS4_GPX3(2), "6260_GPIO2") != 0) {
+        printk("[mt6620] ERROR:Cannot request 6260_GPIO2\n");
+    } else {
+        gpio_direction_output(EXYNOS4_GPX3(2), 1);
+        gpio_set_value(EXYNOS4_GPX3(2), outValue);
+        mdelay(100);
+        gpio_free(EXYNOS4_GPX3(2));
+    }
+
+    printk("[mt6620] --- %s\n",__func__);
+}
+EXPORT_SYMBOL(setup_mt6620_wlan_power_for_onoff);
+
+static int itop4412_wifi_combo_module_gpio_init(void)
+{
+    mtk_combo_init();
+    platform_device_register(&mtk_wmt_dev);
+    platform_device_register(&mtk_sdio_eint_dev);
+}
+#endif
+
 static void __init smdk4x12_machine_init(void)
 {
 #ifdef CONFIG_S3C64XX_DEV_SPI
@@ -4601,6 +4731,9 @@ static void __init smdk4x12_machine_init(void)
 #endif
 #ifdef CONFIG_S3C_DEV_HSMMC3
 	s3c_sdhci3_set_platdata(&smdk4x12_hsmmc3_pdata);
+#endif
+#ifdef  CONFIG_MTK_COMBO_MT66XX
+    itop4412_wifi_combo_module_gpio_init();
 #endif
 #ifdef CONFIG_S5P_DEV_MSHC
 	s3c_mshci_set_platdata(&exynos4_mshc_pdata);

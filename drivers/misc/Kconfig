@@ -588,3 +588,5 @@ endif	# SNFC
 source "drivers/misc/mpu6050/Kconfig"
 #end add
 endif # MISC_DEVICES
+
+source "drivers/misc/mediatek/Kconfig"

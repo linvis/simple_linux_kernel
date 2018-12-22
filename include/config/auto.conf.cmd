@@ -84,7 +84,6 @@ deps_config := \
 	fs/ext2/Kconfig \
 	fs/Kconfig \
 	drivers/topeet/Kconfig \
-	drivers/mtk_wcn_combo/Kconfig \
 	drivers/unaplus/Kconfig \
 	drivers/clocksource/Kconfig \
 	drivers/hwspinlock/Kconfig \
@@ -503,6 +502,9 @@ deps_config := \
 	drivers/scsi/libsas/Kconfig \
 	drivers/scsi/Kconfig \
 	drivers/ide/Kconfig \
+	drivers/misc/mediatek/mt6622/Kconfig \
+	drivers/misc/mediatek/combo_mt66xx/Kconfig \
+	drivers/misc/mediatek/Kconfig \
 	drivers/misc/mpu6050/Kconfig \
 	drivers/misc/c2c/Kconfig \
 	drivers/misc/inv_mpu/pressure/Kconfig \
